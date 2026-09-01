@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linsenfinder – Deine Halloween Bewertung 🎃</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #0d0500;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Hintergrund-Spinnwebe oben links */
+  .bg-web-tl {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px; height: 220px;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  /* Hintergrund-Spinnwebe unten rechts */
+  .bg-web-br {
+    position: fixed;
+    bottom: 0; right: 0;
+    width: 220px; height: 200px;
+    opacity: 0.15;
+    pointer-events: none;
+    transform: scale(-1, -1);
+  }
+  /* Fledermäuse */
+  .bat {
+    position: fixed;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+  .bat-1 { top: 60px; right: 80px; width: 50px; }
+  .bat-2 { top: 140px; left: 60px; width: 35px; transform: scaleX(-1); }
+  .bat-3 { bottom: 100px; right: 120px; width: 28px; }
+
+  /* ═══ CARD ═══ */
+  .card {
+    background: linear-gradient(160deg, #1a0800 0%, #2a1000 60%, #1a0800 100%);
+    border: 1px solid #e8690a;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 580px;
+    width: 100%;
+    box-shadow:
+      0 0 60px rgba(232, 105, 10, 0.25),
+      0 2px 40px rgba(0,0,0,0.8);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Orange Zierstreifen oben */
+  .card-stripe-top {
+    height: 5px;
+    background: linear-gradient(90deg, #e8690a, #ff9f00, #ff5500, #ff9f00, #e8690a);
+    width: 100%;
+  }
+
+  /* Spinnwebe Card oben rechts */
+  .card-web {
+    position: absolute;
+    top: 5px; right: 0;
+    width: 140px; height: 120px;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  /* ═══ HEADER CARD ═══ */
+  .card-header {
+    padding: 28px 36px 20px 36px;
+    border-bottom: 1px solid rgba(232, 105, 10, 0.3);
+    position: relative;
+  }
+
+  .logo {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .logo-linsen { color: #e8690a; }
+  .logo-finder { color: #ff9f00; }
+
+  .logo-sub {
+    color: #a06030;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* ═══ BODY ═══ */
+  .card-body { padding: 24px 36px 32px 36px; }
+
+  /* Produkt-Badge */
+  .produkt-badge {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(232, 105, 10, 0.12);
+    border-left: 4px solid #e8690a;
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+  }
+  .produkt-emoji { font-size: 32px; }
+  .produkt-info strong {
+    display: block;
+    color: #ff9f00;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+  .produkt-info span {
+    color: #a06030;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Intro-Text */
+  .intro-text {
+    color: #c87d4a;
+    line-height: 1.7;
+    font-size: 14.5px;
+    margin-bottom: 20px;
+  }
+  .intro-text strong { color: #ff9f00; }
+
+  /* Schritte */
+  .steps {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(232, 105, 10, 0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .steps-title {
+    color: #ff9f00;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    color: #c87d4a;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .step:last-child { margin-bottom: 0; }
+  .step-num {
+    background: #e8690a;
+    color: #1a0800;
+    font-weight: 900;
+    font-size: 11px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Amazon Button */
+  .amazon-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #e8690a, #ff5500);
+    color: white;
+    text-align: center;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 20px rgba(232, 105, 10, 0.4);
+    transition: all 0.2s;
+  }
+  .amazon-btn:hover {
+    background: linear-gradient(135deg, #ff7a1a, #ff6600);
+    box-shadow: 0 6px 28px rgba(232, 105, 10, 0.6);
+    transform: translateY(-1px);
+  }
+
+  /* Trennlinie */
+  .divider {
+    border: none;
+    border-top: 1px solid rgba(232, 105, 10, 0.2);
+    margin: 0 0 24px 0;
+  }
+
+  /* Formular */
+  .form-title {
+    color: #ff9f00;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    color: #a06030;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    margin-top: 14px;
+  }
+  label:first-of-type { margin-top: 0; }
+
+  input, textarea {
+    width: 100%;
+    padding: 11px 14px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(232, 105, 10, 0.3);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #f0d0a0;
+    transition: border-color 0.2s;
+  }
+  input::placeholder, textarea::placeholder { color: #5a3a1a; }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #e8690a;
+    background: rgba(232, 105, 10, 0.05);
+  }
+  textarea { height: 70px; resize: vertical; }
+
+  /* Submit Button */
+  .submit-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #e8690a, #ff5500);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 20px rgba(232, 105, 10, 0.35);
+    transition: all 0.2s;
+  }
+  .submit-btn:hover {
+    background: linear-gradient(135deg, #ff7a1a, #ff6600);
+    transform: translateY(-1px);
+  }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Success */
+  .success {
+    display: none;
+    background: rgba(232, 105, 10, 0.1);
+    border: 1px solid #e8690a;
+    padding: 32px;
+    border-radius: 12px;
+    text-align: center;
+    color: #ff9f00;
+  }
+  .success h2 { font-size: 22px; margin-bottom: 10px; }
+  .success p { color: #c87d4a; font-size: 14px; line-height: 1.6; }
+
+  /* Footer Card */
+  .card-footer {
+    padding: 14px 36px;
+    border-top: 1px solid rgba(232, 105, 10, 0.15);
+    text-align: center;
+    color: #5a3a1a;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Orange Zierstreifen unten */
+  .card-stripe-bottom {
+    height: 5px;
+    background: linear-gradient(90deg, #e8690a, #ff9f00, #ff5500, #ff9f00, #e8690a);
+    width: 100%;
+    border-radius: 0 0 16px 16px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Hintergrund-Dekorationen -->
+  <svg class="bg-web-tl" viewBox="0 0 260 220" fill="none" stroke="#ff9f00" stroke-width="1">
+    <line x1="0" y1="0" x2="260" y2="220"/>
+    <line x1="0" y1="0" x2="0" y2="220"/>
+    <line x1="0" y1="0" x2="130" y2="220"/>
+    <line x1="0" y1="0" x2="260" y2="110"/>
+    <line x1="0" y1="0" x2="200" y2="220"/>
+    <line x1="0" y1="0" x2="60" y2="220"/>
+    <ellipse cx="30" cy="26" rx="40" ry="32" stroke-dasharray="3,4"/>
+    <ellipse cx="60" cy="55" rx="85" ry="70" stroke-dasharray="3,4"/>
+    <ellipse cx="95" cy="88" rx="135" ry="115" stroke-dasharray="3,4"/>
+    <ellipse cx="130" cy="120" rx="185" ry="160" stroke-dasharray="3,4"/>
+    <circle cx="38" cy="30" r="6" fill="#e8690a" stroke="none"/>
+    <line x1="33" y1="27" x2="24" y2="21" stroke="#e8690a" stroke-width="1.5"/>
+    <line x1="33" y1="30" x2="21" y2="29" stroke="#e8690a" stroke-width="1.5"/>
+    <line x1="43" y1="27" x2="52" y2="21" stroke="#e8690a" stroke-width="1.5"/>
+    <line x1="43" y1="30" x2="55" y2="29" stroke="#e8690a" stroke-width="1.5"/>
+  </svg>
+
+  <svg class="bg-web-br" viewBox="0 0 260 220" fill="none" stroke="#ff9f00" stroke-width="1">
+    <line x1="0" y1="0" x2="260" y2="220"/>
+    <line x1="0" y1="0" x2="0" y2="220"/>
+    <line x1="0" y1="0" x2="130" y2="220"/>
+    <line x1="0" y1="0" x2="260" y2="110"/>
+    <ellipse cx="30" cy="26" rx="40" ry="32" stroke-dasharray="3,4"/>
+    <ellipse cx="60" cy="55" rx="85" ry="70" stroke-dasharray="3,4"/>
+    <ellipse cx="95" cy="88" rx="135" ry="115" stroke-dasharray="3,4"/>
+  </svg>
+
+  <!-- Fledermäuse -->
+  <svg class="bat bat-1" viewBox="0 0 100 55" fill="#e8690a">
+    <path d="M50,28 Q35,8 8,4 Q24,18 18,33 Q34,23 50,28 Q66,23 82,33 Q76,18 92,4 Q65,8 50,28Z"/>
+    <ellipse cx="50" cy="33" rx="7" ry="9"/>
+  </svg>
+  <svg class="bat bat-2" viewBox="0 0 100 55" fill="#e8690a">
+    <path d="M50,28 Q35,8 8,4 Q24,18 18,33 Q34,23 50,28 Q66,23 82,33 Q76,18 92,4 Q65,8 50,28Z"/>
+    <ellipse cx="50" cy="33" rx="7" ry="9"/>
+  </svg>
+  <svg class="bat bat-3" viewBox="0 0 100 55" fill="#e8690a">
+    <path d="M50,28 Q35,8 8,4 Q24,18 18,33 Q34,23 50,28 Q66,23 82,33 Q76,18 92,4 Q65,8 50,28Z"/>
+    <ellipse cx="50" cy="33" rx="7" ry="9"/>
+  </svg>
+
+  <!-- CARD -->
+  <div class="card">
+    <div class="card-stripe-top"></div>
+
+    <!-- Spinnwebe oben rechts -->
+    <svg class="card-web" viewBox="0 0 140 120" fill="none" stroke="#ff9f00" stroke-width="0.8">
+      <line x1="140" y1="0" x2="0" y2="120"/>
+      <line x1="140" y1="0" x2="140" y2="120"/>
+      <line x1="140" y1="0" x2="70" y2="120"/>
+      <line x1="140" y1="0" x2="0" y2="60"/>
+      <line x1="140" y1="0" x2="0" y2="0"/>
+      <ellipse cx="120" cy="18" rx="28" ry="22" stroke-dasharray="2,3"/>
+      <ellipse cx="100" cy="38" rx="58" ry="48" stroke-dasharray="2,3"/>
+      <ellipse cx="80" cy="62" rx="92" ry="78" stroke-dasharray="2,3"/>
+      <circle cx="118" cy="20" r="4" fill="#e8690a" stroke="none"/>
+    </svg>
+
+    <!-- HEADER -->
+    <div class="card-header">
+      <div class="logo">
+        <span class="logo-linsen">LINSEN</span><span class="logo-finder">FINDER</span>
+      </div>
+      <div class="logo-sub">🎃 Halloween Edition 2026</div>
+    </div>
+
+    <!-- BODY -->
+    <div class="card-body">
+
+      <!-- Produkt -->
+      <div class="produkt-badge">
+        <div class="produkt-emoji">🧛</div>
+        <div class="produkt-info">
+          <strong>Vampir Tageslinsen</strong>
+          <span>Halloween Bewertungs-Aktion 2026</span>
+        </div>
+      </div>
+
+      <!-- Intro -->
+      <p class="intro-text">
+        Vielen Dank für deinen Kauf! Wir hoffen, du hattest einen gruseligen guten Halloween-Auftritt. 🎃<br><br>
+        Als kleines <strong>Dankeschön</strong> für deine Zeit haben wir dir eine Halloween-Überraschung beigelegt. Wir würden uns riesig über deine <strong>ehrliche Bewertung auf Amazon</strong> freuen — sie hilft anderen dabei, die perfekten Halloween-Linsen zu finden!
+      </p>
+
+      <!-- Schritte -->
+      <div class="steps">
+        <div class="steps-title">🕷️ So geht's in 3 Schritten</div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>Klicke auf den Button unten — du landest direkt auf der Amazon-Bewertungsseite</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>Hinterlasse deine ehrliche Bewertung (gerne mit Foto! 📸)</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>Fülle das Formular unten aus — damit wissen wir, dass du dabei warst</div>
+        </div>
+      </div>
+
+      <!-- Amazon Button -->
+      <a class="amazon-btn"
+         href="https://www.amazon.de/review/create-review?asin=B08CB4T8HY"
+         target="_blank"
+         rel="noopener">
+        ⭐ Jetzt auf Amazon bewerten →
+      </a>
+
+      <hr class="divider">
+
+      <!-- Formular -->
+      <div class="form-title">📋 Bestätigung — kurze Rückmeldung</div>
+      <form id="form">
+        <label>Dein Name *</label>
+        <input type="text" name="name" required placeholder="Max Mustermann">
+
+        <label>Deine E-Mail-Adresse *</label>
+        <input type="email" name="email" required placeholder="max@beispiel.de">
+
+        <label>Amazon Bestellnummer *</label>
+        <input type="text" name="bestellnummer" required placeholder="302-1234567-1234567">
+
+        <label>Link zu deiner Bewertung (optional)</label>
+        <textarea name="bewertung_link" placeholder="https://www.amazon.de/review/..."></textarea>
+
+        <input type="hidden" name="produkt" value="Vampir Tageslinsen – Halloween 2026">
+        <button class="submit-btn" type="submit">🎃 Absenden & fertig!</button>
+      </form>
+
+      <!-- Success -->
+      <div class="success" id="success">
+        <h2>🧛 Vielen Dank!</h2>
+        <p>Wir haben deine Rückmeldung erhalten.<br>Du bist ein Halloween-Held! 🎃🕷️</p>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="card-footer">
+      Linsenfinder GmbH · Poppenbütteler Bogen 92 · 22399 Hamburg · hey@linsenfinder.de
+    </div>
+    <div class="card-stripe-bottom"></div>
+  </div>
+
+<script>
+document.getElementById('form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('button');
+  btn.textContent = 'Wird gesendet...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('https://formspree.io/f/xeebwbor', {
+      method: 'POST',
+      body: new FormData(this),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      this.style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    } else {
+      btn.textContent = '⚠️ Fehler – bitte erneut versuchen';
+      btn.disabled = false;
+    }
+  } catch(err) {
+    btn.textContent = '⚠️ Fehler – bitte erneut versuchen';
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
